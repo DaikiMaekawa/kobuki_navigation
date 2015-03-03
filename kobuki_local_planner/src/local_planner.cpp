@@ -10,7 +10,7 @@ public:
     }
 
     void spin(){
-        ros::spin():
+        ros::spin();
     }
 
 private:
