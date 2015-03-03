@@ -96,16 +96,16 @@ catkin_package(
 # )
 
 ## Declare a cpp executable
-# add_executable(kobuki_local_planner_node src/kobuki_local_planner_node.cpp)
+add_executable(local_planner src/local_planner.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(kobuki_local_planner_node kobuki_local_planner_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(kobuki_local_planner_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(local_planner
+   ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
