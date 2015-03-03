@@ -30,7 +30,6 @@ private:
     void global_path_callback(const moveit_msgs::MoveGroupActionResult &path_msg){
         _path_msg_gl = path_msg;
         ROS_INFO_STREAM("path = " << _path_msg_gl);
-        //ROS_INFO_STREAM("joint_names = " << _path_msg_gl.result.planned_trajectory.multi_dof_joint_trajectory.joint_names[0]);
     }
     
     ros::Subscriber _path_sub;
