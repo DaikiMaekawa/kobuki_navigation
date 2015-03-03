@@ -1,10 +1,12 @@
 #include <ros/ros.h>
 #include <moveit_msgs/MoveGroupActionResult.h>
+#include <mocap_msgs/MoCapPose.h>
 
 class LocalPlanner{
 public: 
     LocalPlanner(ros::NodeHandle &node) : 
-        _path_sub(node.subscribe("/move_group/result", 10, &LocalPlanner::global_path_callback, this))
+        _path_sub(node.subscribe("/move_group/result", 10, &LocalPlanner::global_path_callback, this)),
+        _pose_sub(node.subscribe("/kobuki/mocap_pose", 10, &LocalPlanner::self_pose_callback, this))
     {
 
     }
@@ -27,14 +29,19 @@ public:
     }
 
 private:
+    void self_pose_callback(const mocap_msgs::MoCapPose &pose_msg){
+        _self_pose = pose_msg;
+        ROS_INFO_STREAM("pose = " << _self_pose);
+    }
+
     void global_path_callback(const moveit_msgs::MoveGroupActionResult &path_msg){
         _path_msg_gl = path_msg;
         ROS_INFO_STREAM("path = " << _path_msg_gl);
     }
     
-    ros::Subscriber _path_sub;
+    ros::Subscriber _path_sub, _pose_sub;
     moveit_msgs::MoveGroupActionResult _path_msg_gl;
-
+    mocap_msgs::MoCapPose _self_pose;
 };
 
 int main(int argc, char *argv[]){
