@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: kobuki_description
+    relative_path: urdf/hoge.urdf
+  SRDF:
+    relative_path: config/kobuki_standalone.srdf
+  CONFIG:
+    generated_timestamp: 1425349286
