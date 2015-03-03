@@ -4,7 +4,7 @@ project(kobuki_local_planner)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED roscpp)
+find_package(catkin REQUIRED roscpp mocap_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -78,7 +78,7 @@ find_package(catkin REQUIRED roscpp)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES kobuki_local_planner
-#  CATKIN_DEPENDS other_catkin_pkg
+#   CATKIN_DEPENDS 
 #  DEPENDS system_lib
 )
 
