@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(kobuki_nav_executer)
+project(kobuki_nav_executor)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -77,7 +77,7 @@ find_package(catkin REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES kobuki_nav_executer
+#  LIBRARIES kobuki_nav_executor
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -91,19 +91,19 @@ catkin_package(
 # include_directories(include)
 
 ## Declare a cpp library
-# add_library(kobuki_nav_executer
-#   src/${PROJECT_NAME}/kobuki_nav_executer.cpp
+# add_library(kobuki_nav_executor
+#   src/${PROJECT_NAME}/kobuki_nav_executor.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(kobuki_nav_executer_node src/kobuki_nav_executer_node.cpp)
+# add_executable(kobuki_nav_executor_node src/kobuki_nav_executor_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(kobuki_nav_executer_node kobuki_nav_executer_generate_messages_cpp)
+# add_dependencies(kobuki_nav_executor_node kobuki_nav_executor_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(kobuki_nav_executer_node
+# target_link_libraries(kobuki_nav_executor_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -122,7 +122,7 @@ catkin_package(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS kobuki_nav_executer kobuki_nav_executer_node
+# install(TARGETS kobuki_nav_executor kobuki_nav_executor_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -147,7 +147,7 @@ catkin_package(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_kobuki_nav_executer.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_kobuki_nav_executor.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
