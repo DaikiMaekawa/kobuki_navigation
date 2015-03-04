@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <moveit_msgs/MoveGroupActionResult.h>
 #include <mocap_msgs/MoCapPose.h>
+#include <trajectory_msgs/MultiDOFJointTrajectory.h>
 
 class LocalPlanner{
 public: 
@@ -16,10 +17,10 @@ public:
 
         while(ros::ok()){
             double min_goal_dist = 99999999;
-            for(int i=0; i < _path_msg_gl.result.planned_trajectory.multi_dof_joint_trajectory.points.size(); i++){
-                double x = _path_msg_gl.result.planned_trajectory.multi_dof_joint_trajectory.points[i].transforms[0].translation.x;
-                double y = _path_msg_gl.result.planned_trajectory.multi_dof_joint_trajectory.points[i].transforms[1].translation.y;
-                double z = _path_msg_gl.result.planned_trajectory.multi_dof_joint_trajectory.points[i].transforms[2].translation.z;
+            for(int i=0; i < _path_gl.points.size(); i++){
+                double x = _path_gl.points[i].transforms[0].translation.x;
+                double y = _path_gl.points[i].transforms[1].translation.y;
+                double z = _path_gl.points[i].transforms[2].translation.z;
                 ROS_INFO_STREAM("path[" << i << "] = (" << x << ", " << y << ", " << z << ")");
             }
 
@@ -31,17 +32,18 @@ public:
 private:
     void self_pose_callback(const mocap_msgs::MoCapPose &pose_msg){
         _self_pose = pose_msg;
-        ROS_INFO_STREAM("pose = " << _self_pose);
+        //ROS_INFO_STREAM("pose = " << _self_pose);
     }
 
     void global_path_callback(const moveit_msgs::MoveGroupActionResult &path_msg){
-        _path_msg_gl = path_msg;
-        ROS_INFO_STREAM("path = " << _path_msg_gl);
+        _path_gl = path_msg.result.planned_trajectory.multi_dof_joint_trajectory;
+        ROS_INFO_STREAM("path = " << _path_gl);
     }
     
     ros::Subscriber _path_sub, _pose_sub;
-    moveit_msgs::MoveGroupActionResult _path_msg_gl;
+    //moveit_msgs::MoveGroupActionResult _path_msg_gl;
     mocap_msgs::MoCapPose _self_pose;
+    trajectory_msgs::MultiDOFJointTrajectory _path_gl;
 };
 
 int main(int argc, char *argv[]){
