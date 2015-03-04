@@ -16,7 +16,6 @@ public:
         ros::Rate r(10);
 
         while(ros::ok()){
-            double min_goal_dist = 99999999;
             for(int i=0; i < _path_gl.points.size(); i++){
                 double x = _path_gl.points[i].transforms[0].translation.x;
                 double y = _path_gl.points[i].transforms[1].translation.y;
