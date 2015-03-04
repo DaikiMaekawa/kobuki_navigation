@@ -16,6 +16,13 @@ double direction_deg(double p_lc[3]) {
     return atan2(p_lc[1], p_lc[0]) * 180.0 / 3.1415;
 }
 
+double normalize_deg(double ang){
+    while(ang > 180) ang -= 360;
+    while(ang < -180) ang+= 360;
+
+    return ang;
+}
+
 void rotation2d(double p_in[3], double dq, double p_out[3]){
     p_out[0] = cos(dq) * p_in[0] - sin(dq) * p_in[1];
     p_out[1] = sin(dq) * p_in[0] + cos(dq) * p_in[1];
@@ -40,6 +47,26 @@ double clamp(double value, double high, double low){
     }
 }
 
+void quaternion_to_rpy(double q[4], double rpy[3]){
+    const float sin_beta = 2 * (q[3] * q[1] - q[0] * q[2]);
+
+    if(sin_beta < -1.0f){
+        rpy[0] = 2 * atan2(q[0], q[3]);
+        rpy[1] = -0.5f * M_PI;
+        rpy[2] = 0;
+    }else if(sin_beta > 1.0f){
+        rpy[0] = 2 * atan2(q[0], q[3]);
+        rpy[1] = 0.5f * M_PI;
+        rpy[2] = 0;
+    }else{
+        rpy[0] = atan2(2 * (q[3] * q[0] + q[1] * q[2]),
+                    1.0f - 2 * (q[0] * q[0] + q[1] * q[1]));
+        rpy[1] = asin(sin_beta);
+        rpy[2] = atan2(2 * (q[3] * q[2] + q[1] * q[0]),
+                    1.0f - 2 * (q[1] * q[1] + q[2] * q[2]));
+    }
+}
+
 class LocalPlanner{
 public: 
     LocalPlanner(ros::NodeHandle &node) : 
@@ -61,11 +88,20 @@ public:
                 t_pos_gl[0] = _path_gl_it->transforms[0].translation.x;
                 t_pos_gl[1] = _path_gl_it->transforms[0].translation.y;
                 t_pos_gl[2] = 0;
-                
+
+                double rpy[3];
+                double q[4];
+                q[0] = _self_pose.pose.orientation.x;
+                q[1] = _self_pose.pose.orientation.y;
+                q[2] = _self_pose.pose.orientation.z;
+                q[3] = _self_pose.pose.orientation.w;
+
+                quaternion_to_rpy(q, rpy);
+
                 double self_pos[3];
                 self_pos[0] = _self_pose.pose.position.x;
                 self_pos[1] = _self_pose.pose.position.y;
-                self_pos[2] = 0;
+                self_pos[2] = rpy[2];
 
                 double dist = distance_points(t_pos_gl, self_pos);
                 ROS_INFO_STREAM("target_pos = (" << t_pos_gl[0] << ", " << t_pos_gl[1] << ", " << t_pos_gl[2] << ")");
@@ -76,14 +112,23 @@ public:
                 coord_trans_global_to_local(self_pos, t_pos_gl, t_pos_lc);
                 double dir = direction_deg(t_pos_lc);
                 ROS_INFO_STREAM("dir = " << dir);
-
-                cmd.linear.x = clamp(t_pos_lc[0], 1.0, -1.0);
-                cmd.linear.y = clamp(t_pos_lc[1], 1.0, -1.0);
-                //cmd.angular.z = clamp(dir * 0.01, 1.0, -1.0);
-
-                if(dist < 0.3) {
+                ROS_INFO_STREAM("normalize_dir = " << normalize_deg(dir));
+                
+                if(normalize_deg(dir) > 30){
+                    cmd.linear.x = 0;
+                    cmd.linear.y = 0;
+                    cmd.angular.z = clamp(normalize_deg(dir) * 0.01, 1.0, -1.0);
+                }else{
+                    cmd.linear.x = clamp(t_pos_lc[0], 1.0, -1.0);
+                    cmd.linear.y = clamp(t_pos_lc[1], 1.0, -1.0);
+                    cmd.angular.z = clamp(normalize_deg(dir) * 0.01, 1.0, -1.0);
+                }
+                
+                if(dist < 0.3 && dir < 40) {
                     _path_gl_it++;
                 }
+            }else{
+                
             }
 
             ROS_INFO("loop");
@@ -95,6 +140,7 @@ public:
     }
 
 private:
+    
     
     void self_pose_callback(const mocap_msgs::MoCapPose &pose_msg){
         _self_pose = pose_msg;
