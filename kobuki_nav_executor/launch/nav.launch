@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find kobuki_moveit_config)/launch/demo.launch"/>
+    <node name="kobuki_local_planner" pkg="kobuki_local_planner" type="local_planner"/>
+</launch>
